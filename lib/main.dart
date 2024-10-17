@@ -1,31 +1,35 @@
-
 import 'package:calc_upeu/comp/CalcButton.dart';
 import 'package:calc_upeu/comp/CustomAppBar.dart';
 import 'package:calc_upeu/theme/AppTheme.dart';
 import 'package:flutter/material.dart';
+import 'dart:math'; // Para usar sqrt y pi
 
 void main() {
   runApp(const CalcApp());
 }
 
 class CalcApp extends StatefulWidget {
-  const CalcApp({super.key}) ;
+  const CalcApp({super.key});
   @override
   CalcAppState createState() => CalcAppState();
 }
+
 class CalcAppState extends State<CalcApp> {
   String valorAnt = '';
   String operador = '';
   TextEditingController _controller = new TextEditingController();
+
   void numClick(String text) {
     setState(() => _controller.text += text);
     print(_controller);
   }
+
   void clear(String text) {
     setState(() {
       _controller.text = '';
     });
   }
+
   void opeClick(String text) {
     setState(() {
       valorAnt = _controller.text;
@@ -33,11 +37,13 @@ class CalcAppState extends State<CalcApp> {
       _controller.text = '';
     });
   }
-  void accion(){
+
+  void accion() {
     setState(() {
       print("");
     });
   }
+
   void resultOperacion(String text) {
     setState(() {
       switch (operador) {
@@ -64,16 +70,62 @@ class CalcAppState extends State<CalcApp> {
       }
     });
   }
+
+  void sqrtClick(String text) {
+    setState(() {
+      _controller.text = (sqrt(double.parse(_controller.text))).toString();
+    });
+  }
+
+  void piClick(String text) {
+    setState(() {
+      _controller.text = pi.toString();
+    });
+  }
+
+  void squareClick(String text) {
+    setState(() {
+      _controller.text =
+          (double.parse(_controller.text) * double.parse(_controller.text))
+              .toString();
+    });
+  }
+
+  void powClick(String text) {
+    setState(() {
+      valorAnt = _controller.text;
+      operador = '^';
+      _controller.text = '';
+    });
+  }
+
+  void calculatePow(String text) {
+    setState(() {
+      _controller.text = pow(double.parse(valorAnt), double.parse(_controller.text)).toString();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<List> labelList = [["AC","C","%","/"], ["7","8","9","*"],["4","5","6","-"],["1","2","3","+"],[".","0","00","="]];
-    List<List> funx=[[clear,clear, opeClick,opeClick ],
-      [numClick,numClick, numClick,opeClick ],
-      [numClick,numClick, numClick,opeClick ],
-      [numClick,numClick, numClick,opeClick ],
-      [numClick,numClick, numClick,resultOperacion ]];
+    List<List> labelList = [
+      ["AC", "C", "%", "/"],
+      ["7", "8", "9", "*"],
+      ["4", "5", "6", "-"],
+      ["1", "2", "3", "+"],
+      [".", "0", "00", "="],
+      ["√", "π", "^2", "^n"]
+    ];
 
-    AppTheme.colorX=Colors.blue;
+    List<List> funx = [
+      [clear, clear, opeClick, opeClick],
+      [numClick, numClick, numClick, opeClick],
+      [numClick, numClick, numClick, opeClick],
+      [numClick, numClick, numClick, opeClick],
+      [numClick, numClick, numClick, resultOperacion],
+      [sqrtClick, piClick, squareClick, powClick]
+    ];
+
+    AppTheme.colorX = Colors.blue;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Calculator',
@@ -87,32 +139,23 @@ class CalcAppState extends State<CalcApp> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Card(
-/*color:
-Theme.of(context).colorScheme.surfaceVariant,*/
                 margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: TextField(
                   textAlign: TextAlign.end,
                   controller: _controller,
                 ),
               ),
-//aqui codigo
               SizedBox(height: 20),
-              ...List.generate(labelList.length, (index) =>
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ...List.generate(
-                        labelList[index].length,
-                            (indexx) => CalcButton(
-                          text: labelList[index][indexx],
-                          callback: funx[index][indexx] as Function,
-                        ),
-                      ),
-                    ],
-                  )
-              )
-
+              ...List.generate(labelList.length, (index) => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ...List.generate(labelList[index].length, (indexx) => CalcButton(
+                    text: labelList[index][indexx],
+                    callback: funx[index][indexx] as Function,
+                  )),
+                ],
+              ))
             ],
           ),
         ),
