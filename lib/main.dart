@@ -3,7 +3,7 @@ import 'package:calc_upeu/comp/CustomAppBar.dart';
 import 'package:calc_upeu/theme/AppTheme.dart';
 import 'package:flutter/material.dart';
 import 'dart:math'; // Para usar sqrt y pi
-
+//Huahuaccapa Ccama Jaqueline
 void main() {
   runApp(const CalcApp());
 }
